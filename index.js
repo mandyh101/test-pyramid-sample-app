@@ -1,5 +1,20 @@
 const app = require('./server');
 const http = require('http');
+const db = require('./models');
+
+async function initializeDatabase() {
+  try {
+    await db.sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+    await db.sequelize.sync();
+    console.log('All models were synchronized successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+// Initialize database before starting the server
+initializeDatabase();
 
 // Get port from environment or use 3000 as default
 const port = process.env.PORT || 3000;

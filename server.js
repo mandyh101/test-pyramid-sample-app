@@ -1,6 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
-require('dotenv').config()
+
+// Import database models
+const db = require('./models');
 
 // Init express app
 const app = express();
@@ -9,6 +12,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Person routes
+app.get('/api/persons', async (req, res) => {
+  try {
+    const persons = await db.Person.findAll();
+    res.json(persons);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // simple route for testing - to delete later
 app.get('/api/test', (req, res) => {
